@@ -181,3 +181,4 @@ mlruns/
 
 # Catboost
 catboost_info/
+temp.txt

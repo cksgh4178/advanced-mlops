@@ -27,7 +27,7 @@ with DAG(
     default_args={
         "owner": "user",
         "depends_on_past": False,
-        "email": ["otzslayer@gmail.com"],
+        "email": ["chpark4175@lgcns.com"],
         "on_failure_callback": failure_callback,
         "on_success_callback": success_callback,
     },
@@ -37,13 +37,28 @@ with DAG(
     catchup=False,
     tags=["lgcns", "mlops"],
 ) as dag:
+    data_extract = SQLExecuteQueryOperator(
+        task_id="data_extraction",
+        conn_id=conn_id,
+        sql=read_sql_file(sql_file_path),
+        split_statements=True,
+    )
+
+    data_preprocessing = BashOperator(
+        task_id="data_preprocessing",
+        bash_command=f"cd {airflow_dags_path}/pipelines/continuous_training/docker &&"
+        "docker compose up --build && docker compose down",
+        env={
+            "PYTHON_FILE": "/home/codespace/data_preprocessing/preprocessor.py",
+            "MODEL_NAME": "credit_score_classification",
+            "BASE_DT": "{{ ds }}",
+        },
+        append_env=True,
+        retries=1,
+    )
+
     # TODO: 코드 작성
     # 아래 Task를 적절한 Operator를 사용하여 구현
-    
-    data_extract = EmptyOperator(task_id="data_extraction")
-
-    data_preprocessing = EmptyOperator(task_id="data_preprocessing")
-
     training = EmptyOperator(task_id="model_training")
 
     data_extract >> data_preprocessing >> training

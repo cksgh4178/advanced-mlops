@@ -3,7 +3,7 @@ LABEL maintainer="otzslayer@gmail.com"
 
 ARG USER_HOME=/home/codespace
 
-ARG UTIL_PATH= utils
+ARG UTIL_PATH=utils
 ARG PREPROCESSING_PATH=pipelines/continuous_training/data_preprocessing
 ARG REQUIREMENTS_PATH=pipelines/continuous_training/docker
 

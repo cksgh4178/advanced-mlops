@@ -1,4 +1,3 @@
-
 services:
   continuous_training_pipeline:
     build:
